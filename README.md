@@ -1,10 +1,15 @@
 
 We are trying to use Tensorlog for Community Detection in complex Networks (like Twitter).
-First few goals are listed below:
+The first few goals are listed below:
+
 a) Add three social-networks datasets (atleast one should be Twtiiter)
+
 b) Try exisitng supervised and semi-supervised algorithms to get a baseline
+
 c) Format the networks data in the format TensorLog data format
+
 d) Use TensorLog to get community detection accuracy
+
 e) Update TenrLog if needed to make it a better for community detection in complex networks
 
 
