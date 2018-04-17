@@ -22,6 +22,8 @@ def runMain(argv):
   trainFile = 'inputs/%s-train.exam' % opts.stem
   testFile = 'inputs/%s-test.exam' % opts.stem
 
+  print(factFile)
+
   # construct a Compiler object
   tlog = simple.Compiler(db=factFile,prog='social.tlog')
 
