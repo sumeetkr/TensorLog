@@ -14,4 +14,4 @@ datasets/*/eval.log
 datasets/*/expt.log
 datasets/*/tmp-cache/*
 datasets/*/inputs/*
-
+.DS_Store
