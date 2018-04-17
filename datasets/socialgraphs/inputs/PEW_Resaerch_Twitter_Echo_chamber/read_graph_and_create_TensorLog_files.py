@@ -11,8 +11,9 @@ def get_labels():
 	id_labels = {}
 
 	for index, row in node_labels.iterrows():
+		# row = row.strip()
 	    ids.append(row['Node_Name'])
-	    id_labels[row['Node_Name']] = row['louvain']
+	    id_labels[row['Node_Name']] = row['louvain'].strip()
 	
 	print('Number of total users', len((ids)))
 	return id_labels, ids
@@ -32,30 +33,33 @@ def get_edges():
 	return source_targets
 
 def create_cfacts_file(fact_ids, id_labels, source_targets):
-	facts_file_path = './EchoChamber.cfacts' # friend	rightrainbow.com	volokh.com... label	tomburka.com	Liberal
+	facts_file_path = '../EchoChamber.cfacts' # friend	rightrainbow.com	volokh.com... label	tomburka.com	Liberal
 	#label	jinkythecat.blogspot.com	Liberal
 	with open(facts_file_path, 'a') as fact_file:
 		for id, label in id_labels.iteritems():
 			if id in fact_ids:
-				fact_file.write('label'+ '\t'+ id+'\t'+id_labels[id] + '\n' )
+				fact_file.write('label'+ '\t'+ id+'\t'+ chr(int(id_labels[id])+64) + '\n' )
 
-	with open(facts_file_path, 'a') as fact_file:
-		for source, targets in source_targets.iteritems():
-			for target in targets:
-				fact_file.write('friend' + '\t'+ source+ '\t' + target + '\n')		
+				targets = source_targets[id]
+				for target in targets:
+					fact_file.write('friend' + '\t'+ id+ '\t' + target + '\n')		
 
+# with open(facts_file_path, 'a') as fact_file:
+					# for source, targets in source_targets.iteritems():
+					# 	for target in targets:
+					# 		fact_file.write('friend' + '\t'+ source+ '\t' + target + '\n')		
 
 def create_train_test_examples(train_ids, test_ids, id_labels):
-	train_file_path = './EchoChamber-train.exam' # inferred_label	rightrainbow.com	Conservative
-	test_file_path = './EchoChamber-test.exam' # inferred_label	rightrainbow.com	Conservative
+	train_file_path = '../EchoChamber-train.exam' # inferred_label	rightrainbow.com	Conservative
+	test_file_path = '../EchoChamber-test.exam' # inferred_label	rightrainbow.com	Conservative
 
 	with open(train_file_path, 'a') as train_file:
 	    for user in train_ids:
-	        train_file.write('inferred_label' + '\t' + user + '\t' + id_labels[user] + '\n')
+	        train_file.write('inferred_label' + '\t' + user + '\t' + chr(int(id_labels[user])+64) + '\n')
 	    
 	with open(test_file_path, 'a') as test_file:
 	    for user in test_ids:
-	        test_file.write('inferred_label' + '\t' + user + '\t' + id_labels[user] + '\n')
+	        test_file.write('inferred_label' + '\t' + user + '\t' + chr(int(id_labels[user])+64) + '\n')
 
 id_labels, ids = get_labels()
 print(len(id_labels))
