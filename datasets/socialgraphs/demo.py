@@ -22,15 +22,16 @@ def runMain(argv):
   trainFile = 'inputs/%s-train.exam' % opts.stem
   testFile = 'inputs/%s-test.exam' % opts.stem
 
-  print(factFile)
-
   # construct a Compiler object
   tlog = simple.Compiler(db=factFile,prog='social.tlog')
+
+
 
   # tweak the program and database
   tlog.prog.maxDepth = opts.max_depth
   # scale down the friend links, according to the option link_scale.
   # smaller weights are like a higher reset in RWR/PPR
+  
   tlog.db.matEncoding[('friend',2)] = opts.link_scale * tlog.db.matEncoding[('friend',2)]
   # specify which relations will be treated as parameters
   if opts.learn_friend: tlog.mark_db_predicate_trainable('friend/2')

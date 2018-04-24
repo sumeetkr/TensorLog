@@ -40,14 +40,14 @@ def create_cfacts_file(fact_ids, id_labels, source_targets):
 			if id in fact_ids:
 				fact_file.write('label'+ '\t'+ id+'\t'+ chr(int(id_labels[id])+64) + '\n' )
 
-				targets = source_targets[id]
-				for target in targets:
-					fact_file.write('friend' + '\t'+ id+ '\t' + target + '\n')		
+				# targets = source_targets[id]
+				# for target in targets:
+				# 	fact_file.write('friend' + '\t'+ id+ '\t' + target + '\n')		
 
-# with open(facts_file_path, 'a') as fact_file:
-					# for source, targets in source_targets.iteritems():
-					# 	for target in targets:
-					# 		fact_file.write('friend' + '\t'+ source+ '\t' + target + '\n')		
+	with open(facts_file_path, 'a') as fact_file:
+		for source, targets in source_targets.iteritems():
+			for target in targets:
+				fact_file.write('friend' + '\t'+ source+ '\t' + target + '\n')		
 
 def create_train_test_examples(train_ids, test_ids, id_labels):
 	train_file_path = '../EchoChamber-train.exam' # inferred_label	rightrainbow.com	Conservative

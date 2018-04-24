@@ -29,13 +29,18 @@ class TestAccTF(unittest.TestCase):
   #   init_acc,final_acc = demo.runMain("--stem umbc --link_scale 0.1".split())
   #   self.assertTrue( 0.94 < init_acc < final_acc < 0.95)
 
-  def testTwitter(self):
-    init_acc,final_acc = demo.runMain("--stem Twitter --link_scale 0.1".split())
-    self.assertTrue( 0.94 < init_acc < final_acc < 0.95)
+  # def testTwitter(self):
+  #   init_acc,final_acc = demo.runMain("--stem Twitter --link_scale 0.1".split())
+  #   self.assertTrue( 0.94 < init_acc < final_acc < 0.95)
 
-  def testTwitterEchoChamber(self):
-    init_acc,final_acc = demo.runMain("--stem EchoChamber --link_scale 0.1".split())
-    self.assertTrue( 0.94 < init_acc < final_acc < 0.95)
+  # def testTwitterEchoChamber(self):
+  #   init_acc,final_acc = demo.runMain("--stem EchoChamber --link_scale 0.1".split())
+  #   self.assertTrue( 0.94 < init_acc < final_acc < 0.95)
+
+  def testSyntheticPlantedPartition(self):
+      init_acc,final_acc = demo.runMain("--stem planted_partition".split())
+      self.assertTrue( 0.60 < init_acc < 1.0 )
+      self.assertTrue( 0.80 < final_acc < 1.0 )
 
 
 if __name__ == "__main__":
