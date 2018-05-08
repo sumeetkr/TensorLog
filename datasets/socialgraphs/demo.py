@@ -1,6 +1,6 @@
+import numpy as np
 import sys
 import tensorflow as tf
-
 from tensorlog import simple
 
 def runMain(argv):
@@ -25,8 +25,6 @@ def runMain(argv):
   # construct a Compiler object
   tlog = simple.Compiler(db=factFile,prog='social.tlog')
 
-
-
   # tweak the program and database
   tlog.prog.maxDepth = opts.max_depth
   # scale down the friend links, according to the option link_scale.
@@ -43,7 +41,7 @@ def runMain(argv):
   predicted_y = tlog.inference(mode)
   actual_y = tlog.target_output_placeholder(mode)
 
-  correct_predictions = tf.equal(tf.argmax(actual_y,1), tf.argmax(predicted_y,1))
+  correct_predictions = tf.equal(tf.argmax(actual_y, 1), tf.argmax(predicted_y, 1))
   accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
 
   # also get the corresponding loss function from tensorlog
@@ -68,9 +66,10 @@ def runMain(argv):
 
   # compute initial test-set performance
   (ux,uy) = testData[mode]
-  # print('ux', ux )
-  # print('uy', uy)
+  print('ux', ux )
+  print('uy', uy)
 
+  print(np.sum(np.abs(ux- uy)))
   test_fd = {tlog.input_placeholder_name(mode):ux, tlog.target_output_placeholder_name(mode):uy}
   initial_accuracy = session.run(accuracy, feed_dict=test_fd)
   print 'initial test acc', initial_accuracy
