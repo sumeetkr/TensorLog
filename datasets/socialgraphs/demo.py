@@ -56,6 +56,7 @@ def runMain(argv):
   optimizer = tf.train.AdagradOptimizer(1.0)
   train_step = optimizer.minimize(regularized_loss)
 
+
   # set up the session
   session = tf.Session()
   session.run(tf.global_variables_initializer())
@@ -69,10 +70,42 @@ def runMain(argv):
   print('ux', ux )
   print('uy', uy)
 
-  print(np.sum(np.abs(ux- uy)))
+  print('ux -uy', np.abs(ux- uy))
+
+
+  # logits = tf.Variable([[0.1, 0.5, 0.4],
+  #     [0.8, 0.1, 0.1],
+  #     [0.6, 0.3, 0.2]])
+  # labels = tf.Variable([[0, 1, 0],
+  #     [1, 0, 0],
+  #     [0, 0, 1]])
+
+  
+  
+
+  # acc, acc_op = tf.metrics.accuracy(\
+  #   labels=tf.argmax(tf.convert_to_tensor(ux, dtype=tf.float32), 1),\
+  #   predictions=tf.argmax(tf.convert_to_tensor(uy, dtype=tf.float32),1))
+
+
+  # sess = tf.InteractiveSession()
+  # tf.global_variables_initializer().run()
+  # tf.local_variables_initializer().run()
+  # print(sess.run([acc, acc_op]))
+  # print('new accuray', sess.run([acc]))
+
+  # acc, acc_op = tf.metrics.accuracy(labels=tf.argmax(actual_y, 0),\
+  #   predictions=tf.argmax(predicted_y,0))
+
+
   test_fd = {tlog.input_placeholder_name(mode):ux, tlog.target_output_placeholder_name(mode):uy}
   initial_accuracy = session.run(accuracy, feed_dict=test_fd)
   print 'initial test acc', initial_accuracy
+
+
+  # initial_accuracy = session.run(acc, feed_dict=test_fd)
+  # print 'initial test acc', initial_accuracy
+
 
   # acc, acc_op = tf.metrics.accuracy(labels=tf.argmax(actual_y, 1),predictions=tf.argmax(predicted_y,1))
   # # sess = tf.InteractiveSession()
