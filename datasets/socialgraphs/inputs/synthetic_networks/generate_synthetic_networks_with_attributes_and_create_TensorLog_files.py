@@ -2,6 +2,8 @@ import networkx as nx
 import random
 
 
+ROOT_PATH = '../../inputs/'
+
 def get_labels(G):
 	ids = G.nodes()
 	id_labels = {}
@@ -43,9 +45,9 @@ def get_edges(G):
 def create_cfacts_file(graph_name, fact_ids, id_labels, source_targets, attribute_match_prob):
 
 	labels_set = set(id_labels.values())
-	facts_file_path = '../' + graph_name+ '.cfacts' # friend	rightrainbow.com	volokh.com... label	tomburka.com	Liberal
+	facts_file_path = ROOT_PATH + graph_name+ '.cfacts' # friend	rightrainbow.com	volokh.com... label	tomburka.com	Liberal
 	#label	jinkythecat.blogspot.com	Liberal
-	with open(facts_file_path, 'a') as fact_file:
+	with open(facts_file_path, 'w') as fact_file:
 		for id, label in id_labels.iteritems():
 			if id in fact_ids:
 				fact_file.write('label'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(id_labels[id])+64) + '\n' )
@@ -53,19 +55,23 @@ def create_cfacts_file(graph_name, fact_ids, id_labels, source_targets, attribut
 			# With a probability, we write the right attribute
 			# else write the wrong attribute
 			# likes_tag
-			if random.random()< attribute_match_prob:
-				fact_file.write('likes_tag'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(id_labels[id])+64) + '\n' )
+			if attribute_match_prob >= 0.5: # for less generate data without attributes
+				if random.random()< attribute_match_prob:
+					fact_file.write('likes_tag'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(id_labels[id])+64) + '\n' )
+				else:
+					# print(labels_set)
+					labels_list = list(labels_set)
+					labels_list.remove(label)
+					# print(labels_list)
+					fact_file.write('likes_tag'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(random.choice(labels_list))+64) + '\n' )
+				
+					# print(id)
+					# targets = source_targets[id]
+					# for target in targets:
+					# 	fact_file.write('friend' + '\t'+ str(id)+ '\t' + str(target) + '\n')	
 			else:
-				# print(labels_set)
-				labels_list = list(labels_set)
-				labels_list.remove(label)
-				# print(labels_list)
-				fact_file.write('likes_tag'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(random.choice(labels_list))+64) + '\n' )
-			
-				# print(id)
-				# targets = source_targets[id]
-				# for target in targets:
-				# 	fact_file.write('friend' + '\t'+ str(id)+ '\t' + str(target) + '\n')		
+				if id in fact_ids:
+					fact_file.write('likes_tag'+ '\t'+ 'node_' +str(id) +'\t'+ chr(int(id_labels[id])+64) + '\n' )
 
 	# all relations should go in facts file			
 	with open(facts_file_path, 'a') as fact_file:
@@ -74,14 +80,14 @@ def create_cfacts_file(graph_name, fact_ids, id_labels, source_targets, attribut
 				fact_file.write('friend' + '\t'+ 'node_' +str(source) + '\t' + 'node_' +str(target) + '\n')		
 
 def create_train_test_examples(graph_name, train_ids, test_ids, id_labels):
-	train_file_path = '../' + graph_name+ '-train.exam' # inferred_label	rightrainbow.com	Conservative
-	test_file_path = '../' + graph_name+ '-test.exam' # inferred_label	rightrainbow.com	Conservative
+	train_file_path = ROOT_PATH + graph_name+ '-train.exam' # inferred_label	rightrainbow.com	Conservative
+	test_file_path = ROOT_PATH + graph_name+ '-test.exam' # inferred_label	rightrainbow.com	Conservative
 
-	with open(train_file_path, 'a') as train_file:
+	with open(train_file_path, 'w') as train_file:
 	    for user in train_ids:
 	        train_file.write('inferred_label' + '\t' + 'node_' +str(user) + '\t' + chr(int(id_labels[user])+64) + '\n')
 	    
-	with open(test_file_path, 'a') as test_file:
+	with open(test_file_path, 'w') as test_file:
 	    for user in test_ids:
 	        test_file.write('inferred_label' + '\t' + 'node_' +str(user) + '\t' + chr(int(id_labels[user])+64) + '\n')
 
@@ -118,7 +124,7 @@ def generate_networks(graph_name, num_of_comm, nodes_in_each_comm,\
 mean_c = 8.0
 n = 1000
 
-for prob in range(5, 10, 1):
+for prob in range(4, 10, 1):
 	attribute_match_prob = 0.1 * prob
 	for c_in_minus_c_out in range(0, 16, 2):
 
@@ -139,4 +145,5 @@ for prob in range(5, 10, 1):
 		graph_name = 'planted_partition_with_attributes_'\
 		 + str(n) + '_'+ '{:04.1f}'.format(c_in_minus_c_out) + '_' \
 		 + str(c_in) + '_' + str(c_out) + '_' + str(attribute_match_prob)
+
 		generate_networks(graph_name, num_of_comm, nodes_in_each_comm, p_in, p_out, attribute_match_prob)
