@@ -11,7 +11,7 @@ def runMain(argv):
   opts.stem = 'karate'
   opts.regularizer_scale = 0.1
   opts.link_scale = 0.9
-  opts.epochs = 20 # 0 for no learning
+  opts.epochs = 20 #0 for no learning
   opts.max_depth = 4
   opts.learn_friend = True
   opts.learn_label = False
@@ -42,6 +42,7 @@ def runMain(argv):
   mode = 'inferred_label/io'
   predicted_y = tlog.inference(mode)
   actual_y = tlog.target_output_placeholder(mode)
+
   correct_predictions = tf.equal(tf.argmax(actual_y,1), tf.argmax(predicted_y,1))
   accuracy = tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
 
@@ -67,16 +68,37 @@ def runMain(argv):
 
   # compute initial test-set performance
   (ux,uy) = testData[mode]
+  # print('ux', ux )
+  # print('uy', uy)
+
   test_fd = {tlog.input_placeholder_name(mode):ux, tlog.target_output_placeholder_name(mode):uy}
   initial_accuracy = session.run(accuracy, feed_dict=test_fd)
-  print 'initial test acc',initial_accuracy
+  print 'initial test acc', initial_accuracy
+
+  # acc, acc_op = tf.metrics.accuracy(labels=tf.argmax(actual_y, 1),predictions=tf.argmax(predicted_y,1))
+  # # sess = tf.InteractiveSession()
+  # tf.global_variables_initializer().run()
+  # tf.local_variables_initializer().run()
+
+  # print(sess.run([acc, acc_op]))
+  # print(sess.run([acc]))
+
+
+  # new_accuracy = tf.metrics.accuracy(labels=tf.argmax(actual_y, 1), predictions=tf.argmax(predicted_y,1))
+  # new_initial_accuracy = session.run(new_accuracy, feed_dict=test_fd)
+  # print 'initial test acc', new_initial_accuracy
+
 
   # run the optimizer for fixed number of epochs
   (tx,ty) = trainData[mode]
+  # print(tx)
+  # print(ty)
+
   train_fd = {tlog.input_placeholder_name(mode):tx, tlog.target_output_placeholder_name(mode):ty}
   for i in range(opts.epochs):
     session.run(train_step, feed_dict=train_fd)
-    print 'epoch',i+1,'train loss and accuracy',session.run([unregularized_loss,accuracy], feed_dict=train_fd)
+    print 'epoch',i+1,'train loss and accuracy',session.run([unregularized_loss, accuracy],\
+      feed_dict=train_fd)
 
   # save the learned model
   tlog.set_all_db_params_to_learned_values(session)
